@@ -27,4 +27,14 @@ class Product extends Model
             ->withPivot('quantity_required')
             ->withTimestamps();
     }
+
+    public function productionOrders()
+    {
+        return $this->hasMany(ProductionOrder::class);
+    }
+
+    public function stockMovements()
+    {
+        return $this->morphMany(StockMovement::class, 'stockable');
+    }
 }

@@ -22,4 +22,9 @@ class Part extends Model
             ->withPivot('quantity_required')
             ->withTimestamps();
     }
+
+    public function stockMovements()
+    {
+        return $this->morphMany(StockMovement::class, 'stockable');
+    }
 }

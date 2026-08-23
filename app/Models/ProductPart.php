@@ -15,4 +15,5 @@ class ProductPart extends Model
     {
         return $this->belongsTo(Part::class);
     }
+
 }
