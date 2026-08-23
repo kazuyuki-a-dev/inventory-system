@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Part extends Model
 {
+    use HasFactory;
+
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
@@ -18,6 +21,7 @@ class Part extends Model
 
     public function products()
     {
+
         return $this->belongsToMany(Product::class, 'product_parts')
             ->withPivot('quantity_required')
             ->withTimestamps();
