@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PartController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -17,4 +18,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('categories', CategoryController::class);
     Route::resource('suppliers', SupplierController::class);
     Route::resource('products', ProductController::class);
+    Route::resource('parts', PartController::class);
 });
