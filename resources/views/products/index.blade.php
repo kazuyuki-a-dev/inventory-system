@@ -40,6 +40,7 @@
                 <td>{{ $product->unit }}</td>
                 <td>
                     <a href="{{ route('products.edit', $product) }}">編集</a>
+                    <a href="{{ route('products.parts.index', $product) }}">部品表</a>
                     <form action="{{ route('products.destroy', $product) }}" method="POST" style="display:inline;" onsubmit="return confirm('本当に削除しますか？');">
                         @csrf
                         @method('DELETE')
