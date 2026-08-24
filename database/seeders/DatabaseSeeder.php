@@ -7,6 +7,7 @@ use App\Models\Part;
 use App\Models\Product;
 use App\Models\Supplier;
 use App\Models\User;
+use App\Models\StockMovement;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -45,6 +46,18 @@ class DatabaseSeeder extends Seeder
                     'quantity_required' => rand(1, 10),
                 ]);
             }
+        });
+
+        // 7. 各部品に初期在庫を入庫として登録
+        $parts->each(function ($part) {
+            StockMovement::create([
+                'stockable_type' => $part->getMorphClass(),
+                'stockable_id' => $part->id,
+                'user_id' => 1,
+                'type' => 'in',
+                'quantity' => rand(100, 500),
+                'memo' => '初期在庫登録',
+            ]);
         });
     }
 }
