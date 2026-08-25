@@ -6,6 +6,8 @@
     <x-flash-message />
     <x-validation-errors />
 
+    <x-search-form placeholder="商品名・SKUで検索" />
+
     <div class="table-wrap">
         <table class="data-table">
             <thead>
@@ -43,6 +45,6 @@
     </div>
 
     <div class="mt-4">
-        {{ $productionOrders->links() }}
+        {{ $productionOrders->appends(request()->query())->links() }}
     </div>
 </x-layouts.app>

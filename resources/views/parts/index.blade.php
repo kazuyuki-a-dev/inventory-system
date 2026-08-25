@@ -5,6 +5,8 @@
 
     <x-flash-message />
 
+    <x-search-form placeholder="部品名・SKUで検索" />
+
     <div class="table-wrap">
         <table class="data-table">
             <thead>
@@ -25,6 +27,7 @@
                         <td>{{ number_format($part->price) }}円</td>
                         <td class="text-right">
                             <div class="flex justify-end gap-2">
+                                <x-button variant="secondary" :href="route('parts.stock-in.create', $part)">入庫登録</x-button>
                                 <x-button variant="secondary" :href="route('parts.edit', $part)">編集</x-button>
                                 <x-delete-button :action="route('parts.destroy', $part)" />
                             </div>
@@ -36,6 +39,6 @@
     </div>
 
     <div class="mt-4">
-        {{ $parts->links() }}
+        {{ $parts->appends(request()->query())->links() }}
     </div>
 </x-layouts.app>

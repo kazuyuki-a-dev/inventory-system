@@ -33,6 +33,19 @@ class CustomerTest extends TestCase
             $response->assertSee($customer->name);
         }
     }
+    public function test_authenticated_user_can_search_customer_list(): void
+    {
+        $user = User::factory()->create();
+        Customer::factory()->create(['name' => '田中商事株式会社']);
+        Customer::factory()->create(['name' => '鈴木物産株式会社']);
+
+        $response = $this->actingAs($user)->get('/customers?search=田中');
+
+        $response->assertStatus(200);
+        $response->assertSee('田中商事株式会社');
+        $response->assertDontSee('鈴木物産株式会社');
+    }
+
     public function test_authenticated_user_can_create_customer(): void
     {
         $user = User::factory()->create();

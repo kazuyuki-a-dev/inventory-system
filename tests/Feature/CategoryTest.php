@@ -31,6 +31,19 @@ class CategoryTest extends TestCase
         }
     }
 
+    public function test_authenticated_user_can_search_category_list(): void
+    {
+        $user = User::factory()->create();
+        Category::factory()->create(['name' => '電子部品カテゴリ']);
+        Category::factory()->create(['name' => '梱包資材カテゴリ']);
+
+        $response = $this->actingAs($user)->get('/categories?search=電子部品');
+
+        $response->assertStatus(200);
+        $response->assertSee('電子部品カテゴリ');
+        $response->assertDontSee('梱包資材カテゴリ');
+    }
+
     public function test_authenticated_user_can_create_category(): void
     {
         $user = User::factory()->create();

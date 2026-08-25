@@ -12,7 +12,7 @@
         </thead>
         <tbody>
             @foreach ($parts as $part)
-                @php $isLowStock = $part->currentStock() < 50; @endphp
+                @php $isLowStock = $part->currentStock() < $part->low_stock_threshold; @endphp
                 <tr>
                     <td>{{ $part->sku }}</td>
                     <td>{{ $part->name }}</td>

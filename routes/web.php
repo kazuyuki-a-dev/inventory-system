@@ -23,6 +23,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('customers', CustomerController::class);
     Route::resource('products', ProductController::class);
     Route::resource('parts', PartController::class);
+    Route::get('parts/{part}/stock-in', [PartController::class, 'stockInForm'])->name('parts.stock-in.create');
+    Route::post('parts/{part}/stock-in', [PartController::class, 'stockIn'])->name('parts.stock-in.store');
     Route::get('products/{product}/parts', [ProductPartController::class, 'index'])->name('products.parts.index');
     Route::post('products/{product}/parts', [ProductPartController::class, 'store'])->name('products.parts.store');
     Route::put('products/{product}/parts/{part}', [ProductPartController::class, 'update'])->name('products.parts.update');
@@ -32,4 +34,5 @@ Route::middleware('auth')->group(function () {
     Route::post('production-orders/{productionOrder}/complete', [ProductionOrderController::class, 'complete'])
         ->name('production-orders.complete');
     Route::get('stocks', [StockController::class, 'index'])->name('stocks.index');
+    Route::get('stocks/movements', [StockController::class, 'movements'])->name('stocks.movements');
 });

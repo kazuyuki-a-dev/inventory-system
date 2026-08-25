@@ -22,6 +22,7 @@ class PartFactory extends Factory
             'name' => fake()->randomElement($materials) . fake()->randomElement($components),
             'unit' => fake()->randomElement(['個', '本', 'm', 'kg']),
             'price' => fake()->numberBetween(10, 5000),
+            'low_stock_threshold' => 50,
         ];
     }
 }

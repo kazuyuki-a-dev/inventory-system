@@ -33,6 +33,19 @@ class SupplierTest extends TestCase
             $response->assertSee($supplier->name);
         }
     }
+    public function test_authenticated_user_can_search_supplier_list(): void
+    {
+        $user = User::factory()->create();
+        Supplier::factory()->create(['name' => '田中金属株式会社']);
+        Supplier::factory()->create(['name' => '鈴木樹脂株式会社']);
+
+        $response = $this->actingAs($user)->get('/suppliers?search=田中');
+
+        $response->assertStatus(200);
+        $response->assertSee('田中金属株式会社');
+        $response->assertDontSee('鈴木樹脂株式会社');
+    }
+
     public function test_authenticated_user_can_create_supplier(): void
     {
         $user = User::factory()->create();

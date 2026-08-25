@@ -5,6 +5,8 @@
 
     <x-flash-message />
 
+    <x-search-form placeholder="カテゴリ名で検索" />
+
     <div class="table-wrap">
         <table class="data-table">
             <thead>
@@ -34,6 +36,6 @@
     </div>
 
     <div class="mt-4">
-        {{ $categories->links() }}
+        {{ $categories->appends(request()->query())->links() }}
     </div>
 </x-layouts.app>
