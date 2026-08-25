@@ -14,18 +14,15 @@ class DashboardController extends Controller
         $partCount = Part::count();
         $pendingOrderCount = ProductionOrder::where('status', 'pending')->count();
 
-        $lowStockThreshold = 50;
-
-        $lowStockParts = Part::all()->filter(function (Part $part) use ($lowStockThreshold) {
-            return $part->currentStock() < $lowStockThreshold;
+        $lowStockParts = Part::all()->filter(function (Part $part) {
+            return $part->currentStock() < $part->low_stock_threshold;
         });
 
         return view('dashboard', compact(
             'productCount',
             'partCount',
             'pendingOrderCount',
-            'lowStockParts',
-            'lowStockThreshold'
+            'lowStockParts'
         ));
     }
 }

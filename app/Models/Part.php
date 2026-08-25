@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Part extends Model
 {
     use HasFactory, HasStock;
-    protected $fillable = ['supplier_id', 'sku', 'name', 'unit', 'price'];
+    protected $fillable = ['supplier_id', 'sku', 'name', 'unit', 'price', 'low_stock_threshold'];
 
     public function supplier()
     {

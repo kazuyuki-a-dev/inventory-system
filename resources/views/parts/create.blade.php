@@ -23,6 +23,8 @@
 
                 <x-form.input name="price" label="単価" type="number" step="0.01" :value="old('price')" required />
 
+                <x-form.input name="low_stock_threshold" label="低在庫アラートの閾値" type="number" min="0" :value="old('low_stock_threshold', 50)" />
+
                 <div class="mt-6 flex items-center gap-4">
                     <x-button type="submit">登録</x-button>
                     <a href="{{ route('parts.index') }}" class="text-sm text-gray-600 hover:underline">一覧に戻る</a>

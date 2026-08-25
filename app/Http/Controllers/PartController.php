@@ -33,7 +33,10 @@ class PartController extends Controller
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:50',
             'price' => 'required|numeric|min:0',
+            'low_stock_threshold' => 'nullable|integer|min:0',
         ]);
+
+        $validated['low_stock_threshold'] = $validated['low_stock_threshold'] ?? 50;
 
         Part::create($validated);
 
@@ -59,7 +62,10 @@ class PartController extends Controller
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:50',
             'price' => 'required|numeric|min:0',
+            'low_stock_threshold' => 'nullable|integer|min:0',
         ]);
+
+        $validated['low_stock_threshold'] = $validated['low_stock_threshold'] ?? 50;
 
         $part->update($validated);
 

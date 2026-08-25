@@ -16,7 +16,7 @@
         </div>
     </div>
 
-    <h2 class="mb-3 text-lg font-semibold text-gray-900">在庫少量アラート(閾値: {{ $lowStockThreshold }}個未満)</h2>
+    <h2 class="mb-3 text-lg font-semibold text-gray-900">在庫少量アラート</h2>
 
     @if ($lowStockParts->isEmpty())
         <p class="text-sm text-gray-600">在庫が少ない部品はありません。</p>
@@ -28,6 +28,7 @@
                         <th>SKU</th>
                         <th>部品名</th>
                         <th>現在庫数</th>
+                        <th>閾値</th>
                         <th>単位</th>
                     </tr>
                 </thead>
@@ -37,6 +38,7 @@
                             <td>{{ $part->sku }}</td>
                             <td>{{ $part->name }}</td>
                             <td class="font-semibold text-red-600">{{ $part->currentStock() }}</td>
+                            <td>{{ $part->low_stock_threshold }}</td>
                             <td>{{ $part->unit }}</td>
                         </tr>
                     @endforeach
