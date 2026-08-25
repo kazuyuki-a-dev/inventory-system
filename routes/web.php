@@ -7,6 +7,7 @@ use App\Http\Controllers\PartController;
 use App\Http\Controllers\ProductPartController;
 use App\Http\Controllers\ProductionOrderController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,4 +29,5 @@ Route::middleware('auth')->group(function () {
         ->except(['edit', 'update', 'show', 'destroy']);
     Route::post('production-orders/{productionOrder}/complete', [ProductionOrderController::class, 'complete'])
         ->name('production-orders.complete');
+    Route::get('stocks', [StockController::class, 'index'])->name('stocks.index');
 });
