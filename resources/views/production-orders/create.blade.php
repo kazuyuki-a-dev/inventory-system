@@ -1,55 +1,29 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-layouts.app title="製造指示新規登録">
+    <div class="max-w-lg">
+        <div class="card">
+            <x-validation-errors />
 
-<head>
-    <meta charset="UTF-8">
-    <title>製造指示新規登録 | 在庫管理システム</title>
-</head>
+            <form method="POST" action="{{ route('production-orders.store') }}">
+                @csrf
 
-<body>
-    <h1>製造指示新規登録</h1>
+                <x-form.select name="product_id" label="商品" required>
+                    <option value="">選択してください</option>
+                    @foreach ($products as $product)
+                        <option value="{{ $product->id }}" @selected(old('product_id') == $product->id)>
+                            {{ $product->name }}(SKU: {{ $product->sku }})
+                        </option>
+                    @endforeach
+                </x-form.select>
 
-    @if ($errors->any())
-    <div style="color: red;">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+                <x-form.input name="quantity" label="製造数量" type="number" min="1" :value="old('quantity')" required />
+
+                <x-form.input name="planned_date" label="予定日" type="date" :value="old('planned_date')" />
+
+                <div class="mt-6 flex items-center gap-4">
+                    <x-button type="submit">登録</x-button>
+                    <a href="{{ route('production-orders.index') }}" class="text-sm text-gray-600 hover:underline">一覧に戻る</a>
+                </div>
+            </form>
+        </div>
     </div>
-    @endif
-
-    <form method="POST" action="{{ route('production-orders.store') }}">
-        @csrf
-
-        <div>
-            <label for="product_id">商品</label>
-            <select id="product_id" name="product_id" required>
-                <option value="">選択してください</option>
-                @foreach ($products as $product)
-                <option value="{{ $product->id }}" @selected(old('product_id')==$product->id)>
-                    {{ $product->name }}(SKU: {{ $product->sku }})
-                </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div>
-            <label for="quantity">製造数量</label>
-            <input id="quantity" type="number" name="quantity" min="1" value="{{ old('quantity') }}" required>
-        </div>
-
-        <div>
-            <label for="planned_date">予定日</label>
-            <input id="planned_date" type="date" name="planned_date" value="{{ old('planned_date') }}">
-        </div>
-
-        <div>
-            <button type="submit">登録</button>
-        </div>
-    </form>
-
-    <p><a href="{{ route('production-orders.index') }}">一覧に戻る</a></p>
-</body>
-
-</html>
+</x-layouts.app>

@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Supplier extends Model
+class Customer extends Model
 {
     use HasFactory;
 
     protected $fillable = ['name', 'contact_info'];
 
-    public function parts()
+    public function products()
     {
-        return $this->hasMany(Part::class);
+        return $this->hasMany(Product::class);
     }
 }

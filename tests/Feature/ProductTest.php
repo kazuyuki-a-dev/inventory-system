@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\Supplier;
+use App\Models\Customer;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -36,12 +36,12 @@ class ProductTest extends TestCase
     public function test_authenticated_user_can_create_product(): void
     {
         $category = Category::factory()->create();
-        $supplier = Supplier::factory()->create();
+        $customer = Customer::factory()->create();
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->post('/products', [
             'category_id' => $category->id,
-            'supplier_id' => $supplier->id,
+            'customer_id' => $customer->id,
             'sku' => 'P-TEST01',
             'name' => 'テスト商品',
             'unit' => '個',
@@ -58,12 +58,12 @@ class ProductTest extends TestCase
     public function test_product_creation_fails_without_name(): void
     {
         $category = Category::factory()->create();
-        $supplier = Supplier::factory()->create();
+        $customer = Customer::factory()->create();
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->post('/products', [
             'category_id' => $category->id,
-            'supplier_id' => $supplier->id,
+            'customer_id' => $customer->id,
             'sku' => 'P-TEST02',
             'name' => '',
             'unit' => '個',
@@ -82,7 +82,7 @@ class ProductTest extends TestCase
 
         $response = $this->actingAs($user)->put("/products/{$product->id}", [
             'category_id' => $product->category_id,
-            'supplier_id' => $product->supplier_id,
+            'customer_id' => $product->customer_id,
             'sku' => $product->sku,
             'name' => '新プロダクト名',
             'unit' => $product->unit,

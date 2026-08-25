@@ -1,51 +1,42 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-layouts.app title="仕入先一覧">
+    <x-slot:actions>
+        <x-button :href="route('suppliers.create')">新規登録</x-button>
+    </x-slot:actions>
 
-<head>
-    <meta charset="UTF-8">
-    <title>仕入先一覧 | 在庫管理システム</title>
-</head>
+    <x-flash-message />
 
-<body>
-    <h1>仕入先一覧</h1>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>仕入先名</th>
+                    <th>連絡先</th>
+                    <th>登録日</th>
+                    <th class="text-right">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($suppliers as $supplier)
+                    <tr>
+                        <td>{{ $supplier->id }}</td>
+                        <td>{{ $supplier->name }}</td>
+                        <td>{{ $supplier->contact_info }}</td>
+                        <td>{{ $supplier->created_at->format('Y/m/d') }}</td>
+                        <td class="text-right">
+                            <div class="flex justify-end gap-2">
+                                <x-button variant="secondary" :href="route('suppliers.show', $supplier)">取引一覧</x-button>
+                                <x-button variant="secondary" :href="route('suppliers.edit', $supplier)">編集</x-button>
+                                <x-delete-button :action="route('suppliers.destroy', $supplier)" />
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
-    <p><a href="{{ route('suppliers.create') }}">新規登録</a></p>
-
-    @if (session('success'))
-    <p style="color: green;">{{ session('success') }}</p>
-    @endif
-
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>仕入先名</th>
-                <th>連絡先</th>
-                <th>登録日</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($suppliers as $supplier)
-            <tr>
-                <td>{{ $supplier->id }}</td>
-                <td>{{ $supplier->name }}</td>
-                <td>{{ $supplier->contact_info }}</td>
-                <td>{{ $supplier->created_at->format('Y/m/d') }}</td>
-                <td>
-                    <a href="{{ route('suppliers.edit', $supplier) }}">編集</a>
-                    <form action="{{ route('suppliers.destroy', $supplier) }}" method="POST" style="display:inline;" onsubmit="return confirm('本当に削除しますか？');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">削除</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    {{ $suppliers->links() }}
-</body>
-
-</html>
+    <div class="mt-4">
+        {{ $suppliers->links() }}
+    </div>
+</x-layouts.app>

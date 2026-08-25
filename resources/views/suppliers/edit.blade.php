@@ -1,44 +1,21 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-layouts.app title="仕入先編集">
+    <div class="max-w-lg">
+        <div class="card">
+            <x-validation-errors />
 
-<head>
-    <meta charset="UTF-8">
-    <title>仕入先編集 | 在庫管理システム</title>
-</head>
+            <form method="POST" action="{{ route('suppliers.update', $supplier) }}">
+                @csrf
+                @method('PUT')
 
-<body>
-    <h1>仕入先編集</h1>
+                <x-form.input name="name" label="仕入先名" :value="old('name', $supplier->name)" required />
 
-    @if ($errors->any())
-    <div style="color: red;">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+                <x-form.input name="contact_info" label="連絡先" :value="old('contact_info', $supplier->contact_info)" />
+
+                <div class="mt-6 flex items-center gap-4">
+                    <x-button type="submit">更新</x-button>
+                    <a href="{{ route('suppliers.index') }}" class="text-sm text-gray-600 hover:underline">一覧に戻る</a>
+                </div>
+            </form>
+        </div>
     </div>
-    @endif
-
-    <form method="POST" action="{{ route('suppliers.update', $supplier) }}">
-        @csrf
-        @method('PUT')
-
-        <div>
-            <label for="name">仕入先名</label>
-            <input id="name" type="text" name="name" value="{{ old('name', $supplier->name) }}" required>
-        </div>
-
-        <div>
-            <label for="contact_info">連絡先</label>
-            <input id="contact_info" type="text" name="contact_info" value="{{ old('contact_info', $supplier->contact_info) }}">
-        </div>
-
-        <div>
-            <button type="submit">更新</button>
-        </div>
-    </form>
-
-    <p><a href="{{ route('suppliers.index') }}">一覧に戻る</a></p>
-</body>
-
-</html>
+</x-layouts.app>

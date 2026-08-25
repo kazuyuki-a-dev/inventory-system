@@ -9,7 +9,7 @@ class StockController extends Controller
 {
     public function index()
     {
-        $products = Product::with(['category', 'supplier'])->get();
+        $products = Product::with(['category', 'customer'])->get();
         $parts = Part::with('supplier')->get();
 
         return view('stocks.index', compact('products', 'parts'));

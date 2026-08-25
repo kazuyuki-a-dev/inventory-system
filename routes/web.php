@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PartController;
 use App\Http\Controllers\ProductPartController;
@@ -11,7 +12,7 @@ use App\Http\Controllers\StockController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
 Route::middleware('auth')->group(function () {
@@ -19,6 +20,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('categories', CategoryController::class);
     Route::resource('suppliers', SupplierController::class);
+    Route::resource('customers', CustomerController::class);
     Route::resource('products', ProductController::class);
     Route::resource('parts', PartController::class);
     Route::get('products/{product}/parts', [ProductPartController::class, 'index'])->name('products.parts.index');

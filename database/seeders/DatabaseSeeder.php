@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\Customer;
 use App\Models\Part;
 use App\Models\Product;
 use App\Models\Supplier;
@@ -26,10 +27,13 @@ class DatabaseSeeder extends Seeder
         // 3. 仕入先を8件作成
         $suppliers = Supplier::factory(8)->create();
 
-        // 4. 商品を10件作成(既存のカテゴリ・仕入先からランダムに紐付け)
+        // 3b. 納入先を8件作成
+        $customers = Customer::factory(8)->create();
+
+        // 4. 商品を10件作成(既存のカテゴリ・納入先からランダムに紐付け)
         $products = Product::factory(10)
             ->recycle($categories)
-            ->recycle($suppliers)
+            ->recycle($customers)
             ->create();
 
         // 5. 部品を20件作成(既存の仕入先からランダムに紐付け)

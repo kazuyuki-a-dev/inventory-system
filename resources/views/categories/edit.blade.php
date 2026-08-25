@@ -1,39 +1,19 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-layouts.app title="カテゴリ編集">
+    <div class="max-w-lg">
+        <div class="card">
+            <x-validation-errors />
 
-<head>
-    <meta charset="UTF-8">
-    <title>カテゴリ編集 | 在庫管理システム</title>
-</head>
+            <form method="POST" action="{{ route('categories.update', $category) }}">
+                @csrf
+                @method('PUT')
 
-<body>
-    <h1>カテゴリ編集</h1>
+                <x-form.input name="name" label="カテゴリ名" :value="old('name', $category->name)" required />
 
-    @if ($errors->any())
-    <div style="color: red;">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+                <div class="mt-6 flex items-center gap-4">
+                    <x-button type="submit">更新</x-button>
+                    <a href="{{ route('categories.index') }}" class="text-sm text-gray-600 hover:underline">一覧に戻る</a>
+                </div>
+            </form>
+        </div>
     </div>
-    @endif
-
-    <form method="POST" action="{{ route('categories.update', $category) }}">
-        @csrf
-        @method('PUT')
-
-        <div>
-            <label for="name">カテゴリ名</label>
-            <input id="name" type="text" name="name" value="{{ old('name', $category->name) }}" required>
-        </div>
-
-        <div>
-            <button type="submit">更新</button>
-        </div>
-    </form>
-
-    <p><a href="{{ route('categories.index') }}">一覧に戻る</a></p>
-</body>
-
-</html>
+</x-layouts.app>
