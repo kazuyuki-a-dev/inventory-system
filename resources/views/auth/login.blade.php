@@ -10,8 +10,4 @@
 
         <x-button type="submit" class="w-full">ログイン</x-button>
     </form>
-
-    <p class="mt-4 text-center text-sm text-gray-600">
-        <a href="{{ route('register') }}" class="text-brand hover:underline">会員登録はこちら</a>
-    </p>
 </x-layouts.guest>
