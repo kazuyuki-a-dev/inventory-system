@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasStock;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Part extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStock;
     protected $fillable = ['supplier_id', 'sku', 'name', 'unit', 'price'];
 
     public function supplier()

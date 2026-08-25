@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Concerns\HasStock;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStock;
     protected $fillable = ['category_id', 'supplier_id', 'sku', 'name', 'unit', 'price'];
 
     public function category()
