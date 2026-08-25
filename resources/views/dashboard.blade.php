@@ -16,6 +16,7 @@
             <li><a href="{{ route('products.index') }}">商品管理</a></li>
             <li><a href="{{ route('parts.index') }}">部品管理</a></li>
             <li><a href="{{ route('production-orders.index') }}">製造指示</a></li>
+            <li><a href="{{ route('stocks.index') }}">在庫一覧</a></li>
         </ul>
     </nav>
 
