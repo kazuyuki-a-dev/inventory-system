@@ -9,7 +9,8 @@ class SupplierController extends Controller
 {
     public function index()
     {
-        $suppliers = Supplier::latest()->paginate(10);
+        $suppliers = Supplier::when(request('search'), fn ($q, $search) => $q->where('name', 'like', "%{$search}%"))
+            ->latest()->paginate(10);
         return view('suppliers.index', compact('suppliers'));
     }
 

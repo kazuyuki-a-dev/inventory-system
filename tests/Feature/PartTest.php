@@ -32,6 +32,25 @@ class PartTest extends TestCase
         }
     }
 
+    public function test_authenticated_user_can_search_part_list(): void
+    {
+        $user = User::factory()->create();
+        Part::factory()->create(['name' => 'ステンレスボルト', 'sku' => 'PT-00001']);
+        Part::factory()->create(['name' => '樹脂パッキン', 'sku' => 'PT-00002']);
+
+        $response = $this->actingAs($user)->get('/parts?search=ステンレス');
+
+        $response->assertStatus(200);
+        $response->assertSee('ステンレスボルト');
+        $response->assertDontSee('樹脂パッキン');
+
+        // SKUでの検索でも絞り込めることを確認
+        $response = $this->actingAs($user)->get('/parts?search=PT-00002');
+
+        $response->assertSee('樹脂パッキン');
+        $response->assertDontSee('ステンレスボルト');
+    }
+
     public function test_authenticated_user_can_create_part(): void
     {
         $supplier = Supplier::factory()->create();

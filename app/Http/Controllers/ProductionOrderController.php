@@ -13,7 +13,12 @@ class ProductionOrderController extends Controller
 {
     public function index()
     {
-        $productionOrders = ProductionOrder::with(['product', 'user'])->latest()->paginate(10);
+        $productionOrders = ProductionOrder::with(['product', 'user'])
+            ->when(request('search'), fn ($q, $search) => $q->whereHas(
+                'product',
+                fn ($q2) => $q2->where('name', 'like', "%{$search}%")->orWhere('sku', 'like', "%{$search}%")
+            ))
+            ->latest()->paginate(10);
         return view('production-orders.index', compact('productionOrders'));
     }
 

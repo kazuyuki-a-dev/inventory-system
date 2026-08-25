@@ -5,6 +5,8 @@
 
     <x-flash-message />
 
+    <x-search-form placeholder="部品名・SKUで検索" />
+
     <div class="table-wrap">
         <table class="data-table">
             <thead>
@@ -37,6 +39,6 @@
     </div>
 
     <div class="mt-4">
-        {{ $parts->links() }}
+        {{ $parts->appends(request()->query())->links() }}
     </div>
 </x-layouts.app>

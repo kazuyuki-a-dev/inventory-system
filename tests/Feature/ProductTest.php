@@ -33,6 +33,25 @@ class ProductTest extends TestCase
         }
     }
 
+    public function test_authenticated_user_can_search_product_list(): void
+    {
+        $user = User::factory()->create();
+        Product::factory()->create(['name' => '標準ラック', 'sku' => 'P-00001']);
+        Product::factory()->create(['name' => '軽量フレーム', 'sku' => 'P-00002']);
+
+        $response = $this->actingAs($user)->get('/products?search=標準');
+
+        $response->assertStatus(200);
+        $response->assertSee('標準ラック');
+        $response->assertDontSee('軽量フレーム');
+
+        // SKUでの検索でも絞り込めることを確認
+        $response = $this->actingAs($user)->get('/products?search=P-00002');
+
+        $response->assertSee('軽量フレーム');
+        $response->assertDontSee('標準ラック');
+    }
+
     public function test_authenticated_user_can_create_product(): void
     {
         $category = Category::factory()->create();

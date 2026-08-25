@@ -11,7 +11,11 @@ class PartController extends Controller
 {
     public function index()
     {
-        $parts = Part::with('supplier')->latest()->paginate(10);
+        $parts = Part::with('supplier')
+            ->when(request('search'), fn ($q, $search) => $q->where(
+                fn ($q2) => $q2->where('name', 'like', "%{$search}%")->orWhere('sku', 'like', "%{$search}%")
+            ))
+            ->latest()->paginate(10);
         return view('parts.index', compact('parts'));
     }
 
