@@ -32,4 +32,5 @@ Route::middleware('auth')->group(function () {
     Route::post('production-orders/{productionOrder}/complete', [ProductionOrderController::class, 'complete'])
         ->name('production-orders.complete');
     Route::get('stocks', [StockController::class, 'index'])->name('stocks.index');
+    Route::get('stocks/movements', [StockController::class, 'movements'])->name('stocks.movements');
 });
