@@ -1,58 +1,226 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 在庫管理システム (Manufacturing Inventory Management System)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+製造業向けの在庫管理システムです。前職で製造業の在庫管理業務に携わっていた経験をもとに、「仕入先からの部品調達 → 製造指示による部品消費・商品生産 → 納入先への出荷」という一連の業務フローを1つのアプリで管理できるように設計・実装しました。
 
-## About Laravel
+## スクリーンショット
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+| ログイン画面 | ダッシュボード |
+|---|---|
+| ![ログイン画面](docs/screenshots/login.png) | ![ダッシュボード](docs/screenshots/dashboard.png) |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| 部品一覧画面 | 製造指示一覧画面 |
+|---|---|
+| ![部品一覧](docs/screenshots/parts.png) | ![製造指示一覧](docs/screenshots/production-orders.png) |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 機能一覧
 
-## Learning Laravel
+- ユーザー認証（Laravel Fortify: ログイン・パスワードリセット・2要素認証・パスキー対応）
+  - ※ 業務データへの不用意なアクセスを避けるため、公開の新規登録は無効化しており、管理者アカウントはシーダーで作成する運用としています
+- ダッシュボード（登録商品数・部品数・未着手の製造指示数のサマリー表示、部品ごとに設定できる低在庫アラート）
+- カテゴリ管理（CRUD・キーワード検索）
+- 仕入先管理（CRUD・キーワード検索・取引部品一覧）
+- 納入先管理（CRUD・キーワード検索・取引商品一覧）
+- 部品管理（CRUD・SKU/名称検索・手動入庫登録・低在庫アラート閾値の個別設定）
+- 商品管理（CRUD・SKU/名称検索・部品表(BOM)管理）
+- 製造指示（登録・検索、完了処理で必要部品の自動出庫と商品の自動入庫を実行。在庫不足時はDBトランザクションごとロールバック）
+- 在庫一覧（商品・部品の現在庫数表示）
+- 在庫変動履歴（入出庫ログの一覧）
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+本プロジェクトは Laravel Sail（Docker）上で動作します。
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## 環境構築
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/kazuyuki-a-dev/inventory-system.git
+cd inventory-system
+cp .env.example .env
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+`.env` のDB接続情報を、Sailが起動するMySQLコンテナに合わせて書き換えます。
 
-## Contributing
+```
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=sail
+DB_PASSWORD=password
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+`vendor/bin/sail` はcomposerの依存関係としてインストールされるためリポジトリには含まれていません。初回のみ、composerイメージを使って依存関係をインストールします。
 
-## Code of Conduct
+```bash
+docker run --rm \
+    -u "$(id -u):$(id -g)" \
+    -v "$(pwd):/var/www/html" \
+    -w /var/www/html \
+    laravelsail/php84-composer:latest \
+    composer install --ignore-platform-reqs
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+./vendor/bin/sail up -d
+./vendor/bin/sail artisan key:generate
+```
 
-## Security Vulnerabilities
+MySQLコンテナの起動完了までに時間がかかることがあります。数秒待ってから下記のコマンドを実行してください。
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+./vendor/bin/sail artisan migrate --seed
+```
 
-## License
+フロントエンド（Tailwind CSS）のビルドが必要な場合は以下も実行してください。
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+./vendor/bin/sail npm install
+./vendor/bin/sail npm run build
+```
+
+## 👤 テスト用ログインアカウント
+
+環境構築後、`DatabaseSeeder` で作成される以下のアカウントでログインできます。
+
+| 項目 | 設定値 |
+|---|---|
+| メールアドレス | admin@example.com |
+| パスワード | password |
+
+※ 公開の新規登録機能は無効化しているため、追加のユーザーが必要な場合は `sail artisan tinker` 等で作成してください。
+
+## テストの実行と品質担保
+
+本プロジェクトでは、PHPUnit を用いたFeatureテストを整備し、全 **48項目** のテストを通過しています。
+
+```bash
+./vendor/bin/sail artisan test
+```
+
+主なテスト対象:
+
+- 各リソース（カテゴリ・仕入先・納入先・部品・商品・製造指示）のCRUD・検索・未ログイン時のアクセス制限
+- 製造指示の完了処理（在庫が十分な場合／不足する場合の挙動、DBトランザクションのロールバック）
+- 部品の手動入庫登録
+- 部品ごとの低在庫アラート閾値
+- 在庫変動履歴の表示
+
+## 実行環境
+
+- PHP 8.3+
+- Laravel 13
+- Laravel Fortify（認証基盤）
+- MySQL 8.4
+- Redis
+- Tailwind CSS v4
+- Docker / Laravel Sail
+
+## 接続先一覧
+
+- Webサイト: http://localhost
+- MySQL: `localhost:3306`（DBクライアントから接続する場合。認証情報は上記 `.env` と同じ）
+
+## 🛠 データベース設計
+
+| テーブル | 役割 |
+|---|---|
+| `users` | ユーザー（管理者） |
+| `categories` | 商品カテゴリ |
+| `suppliers` | 仕入先（部品の調達元） |
+| `customers` | 納入先（商品の出荷先） |
+| `parts` | 部品 |
+| `products` | 商品 |
+| `product_parts` | 商品と部品の中間テーブル（部品表/BOM、必要数を保持） |
+| `production_orders` | 製造指示 |
+| `stock_movements` | 在庫変動履歴（商品・部品どちらも対象になるポリモーフィック関連） |
+| `passkeys` | パスキー認証情報 |
+
+### ER図
+
+```mermaid
+erDiagram
+    USERS ||--o{ PRODUCTION_ORDERS : "指示する"
+    USERS ||--o{ STOCK_MOVEMENTS : "記録する"
+
+    CATEGORIES ||--o{ PRODUCTS : "分類する"
+    CUSTOMERS ||--o{ PRODUCTS : "納入先"
+    SUPPLIERS ||--o{ PARTS : "仕入先"
+
+    PRODUCTS ||--o{ PRODUCT_PARTS : "使用する部品(BOM)"
+    PARTS ||--o{ PRODUCT_PARTS : "使用される"
+
+    PRODUCTS ||--o{ PRODUCTION_ORDERS : "製造対象"
+    PRODUCTION_ORDERS ||--o{ STOCK_MOVEMENTS : "完了時に発生させる(任意)"
+
+    PARTS ||--o{ STOCK_MOVEMENTS : "在庫変動(部品)"
+    PRODUCTS ||--o{ STOCK_MOVEMENTS : "在庫変動(商品)"
+
+    USERS {
+        bigint id PK
+        string name
+        string email
+        string password
+    }
+    CATEGORIES {
+        bigint id PK
+        string name
+    }
+    SUPPLIERS {
+        bigint id PK
+        string name
+        string contact_info
+    }
+    CUSTOMERS {
+        bigint id PK
+        string name
+        string contact_info
+    }
+    PARTS {
+        bigint id PK
+        bigint supplier_id FK
+        string sku
+        string name
+        string unit
+        decimal price
+        int low_stock_threshold
+    }
+    PRODUCTS {
+        bigint id PK
+        bigint category_id FK
+        bigint customer_id FK
+        string sku
+        string name
+        string unit
+        decimal price
+    }
+    PRODUCT_PARTS {
+        bigint id PK
+        bigint product_id FK
+        bigint part_id FK
+        int quantity_required
+    }
+    PRODUCTION_ORDERS {
+        bigint id PK
+        bigint product_id FK
+        bigint user_id FK
+        int quantity
+        string status
+        date planned_date
+        datetime completed_at
+    }
+    STOCK_MOVEMENTS {
+        bigint id PK
+        string stockable_type
+        bigint stockable_id
+        bigint user_id FK
+        bigint production_order_id FK
+        string type
+        int quantity
+        string memo
+    }
+```
+
+`stock_movements` は `stockable_type` / `stockable_id` によるポリモーフィック関連で、部品（`Part`）・商品（`Product`）のどちらの在庫変動も同一テーブルで記録しています。
+
+## 作成者
+
+作成者: kazuyuki asari
+GitHub: https://github.com/kazuyuki-a-dev
+
+前職では製造業で在庫管理業務に携わっており、その実務経験をもとに「実際の現場で使われることを意識した」在庫管理システムとして本プロジェクトを開発しました。
