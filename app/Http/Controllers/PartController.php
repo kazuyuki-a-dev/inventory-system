@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Part;
+use App\Models\StockMovement;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -66,5 +67,29 @@ class PartController extends Controller
         $part->delete();
 
         return redirect()->route('parts.index')->with('success', '部品を削除しました。');
+    }
+
+    public function stockInForm(Part $part)
+    {
+        return view('parts.stock-in', compact('part'));
+    }
+
+    public function stockIn(Request $request, Part $part)
+    {
+        $validated = $request->validate([
+            'quantity' => 'required|integer|min:1',
+            'memo' => 'nullable|string|max:255',
+        ]);
+
+        StockMovement::create([
+            'stockable_type' => $part->getMorphClass(),
+            'stockable_id' => $part->id,
+            'user_id' => auth()->id(),
+            'type' => 'in',
+            'quantity' => $validated['quantity'],
+            'memo' => $validated['memo'] ?: '手動入庫登録',
+        ]);
+
+        return redirect()->route('parts.index')->with('success', '在庫を追加しました。');
     }
 }
