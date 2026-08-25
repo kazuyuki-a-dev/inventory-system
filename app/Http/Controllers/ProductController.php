@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\Supplier;
+use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -14,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with(['category', 'supplier'])->latest()->paginate(10);
+        $products = Product::with(['category', 'customer'])->latest()->paginate(10);
         return view('products.index', compact('products'));
     }
 
@@ -24,9 +24,9 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        $suppliers = Supplier::all();
+        $customers = Customer::all();
 
-        return view('products.create', compact('categories', 'suppliers'));
+        return view('products.create', compact('categories', 'customers'));
     }
 
     /**
@@ -36,7 +36,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'supplier_id' => 'required|exists:suppliers,id',
+            'customer_id' => 'required|exists:customers,id',
             'sku' => 'required|string|max:255|unique:products,sku',
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:50',
@@ -62,9 +62,9 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         $categories = Category::all();
-        $suppliers = Supplier::all();
+        $customers = Customer::all();
 
-        return view('products.edit', compact('product', 'categories', 'suppliers'));
+        return view('products.edit', compact('product', 'categories', 'customers'));
     }
 
     /**
@@ -74,7 +74,7 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'supplier_id' => 'required|exists:suppliers,id',
+            'customer_id' => 'required|exists:customers,id',
             'sku' => 'required|string|max:255|unique:products,sku,' . $product->id,
             'name' => 'required|string|max:255',
             'unit' => 'required|string|max:50',

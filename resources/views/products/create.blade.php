@@ -1,77 +1,42 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-layouts.app title="商品新規登録">
+    <div class="max-w-lg">
+        <div class="card">
+            <x-validation-errors />
 
-<head>
-    <meta charset="UTF-8">
-    <title>商品新規登録 | 在庫管理システム</title>
-</head>
+            <form method="POST" action="{{ route('products.store') }}">
+                @csrf
 
-<body>
-    <h1>商品新規登録</h1>
+                <x-form.select name="category_id" label="カテゴリ" required>
+                    <option value="">選択してください</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" @selected(old('category_id') == $category->id)>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </x-form.select>
 
-    @if ($errors->any())
-    <div style="color: red;">
-        <ul>
-            @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+                <x-form.select name="customer_id" label="納入先" required>
+                    <option value="">選択してください</option>
+                    @foreach ($customers as $customer)
+                        <option value="{{ $customer->id }}" @selected(old('customer_id') == $customer->id)>
+                            {{ $customer->name }}
+                        </option>
+                    @endforeach
+                </x-form.select>
+
+                <x-form.input name="sku" label="SKU" :value="old('sku')" required />
+
+                <x-form.input name="name" label="商品名" :value="old('name')" required />
+
+                <x-form.input name="unit" label="単位" :value="old('unit')" required />
+
+                <x-form.input name="price" label="単価" type="number" step="0.01" :value="old('price')" required />
+
+                <div class="mt-6 flex items-center gap-4">
+                    <x-button type="submit">登録</x-button>
+                    <a href="{{ route('products.index') }}" class="text-sm text-gray-600 hover:underline">一覧に戻る</a>
+                </div>
+            </form>
+        </div>
     </div>
-    @endif
-
-    <form method="POST" action="{{ route('products.store') }}">
-        @csrf
-
-        <div>
-            <label for="category_id">カテゴリ</label>
-            <select id="category_id" name="category_id" required>
-                <option value="">選択してください</option>
-                @foreach ($categories as $category)
-                <option value="{{ $category->id }}" @selected(old('category_id')==$category->id)>
-                    {{ $category->name }}
-                </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div>
-            <label for="supplier_id">仕入先</label>
-            <select id="supplier_id" name="supplier_id" required>
-                <option value="">選択してください</option>
-                @foreach ($suppliers as $supplier)
-                <option value="{{ $supplier->id }}" @selected(old('supplier_id')==$supplier->id)>
-                    {{ $supplier->name }}
-                </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div>
-            <label for="sku">SKU</label>
-            <input id="sku" type="text" name="sku" value="{{ old('sku') }}" required>
-        </div>
-
-        <div>
-            <label for="name">商品名</label>
-            <input id="name" type="text" name="name" value="{{ old('name') }}" required>
-        </div>
-
-        <div>
-            <label for="unit">単位</label>
-            <input id="unit" type="text" name="unit" value="{{ old('unit') }}" required>
-        </div>
-
-        <div>
-            <label for="price">単価</label>
-            <input id="price" type="number" name="price" step="0.01" value="{{ old('price') }}" required>
-        </div>
-
-        <div>
-            <button type="submit">登録</button>
-        </div>
-    </form>
-
-    <p><a href="{{ route('products.index') }}">一覧に戻る</a></p>
-</body>
-
-</html>
+</x-layouts.app>

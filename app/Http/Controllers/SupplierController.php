@@ -32,7 +32,9 @@ class SupplierController extends Controller
 
     public function show(Supplier $supplier)
     {
-        //
+        $supplier->load('parts');
+
+        return view('suppliers.show', compact('supplier'));
     }
 
     public function edit(Supplier $supplier)

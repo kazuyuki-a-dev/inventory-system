@@ -9,16 +9,16 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     use HasFactory, HasStock;
-    protected $fillable = ['category_id', 'supplier_id', 'sku', 'name', 'unit', 'price'];
+    protected $fillable = ['category_id', 'customer_id', 'sku', 'name', 'unit', 'price'];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function supplier()
+    public function customer()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Customer::class);
     }
 
     public function productParts()

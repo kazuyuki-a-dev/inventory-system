@@ -1,58 +1,44 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-layouts.app title="商品一覧">
+    <x-slot:actions>
+        <x-button :href="route('products.create')">新規登録</x-button>
+    </x-slot:actions>
 
-<head>
-    <meta charset="UTF-8">
-    <title>商品一覧 | 在庫管理システム</title>
-</head>
+    <x-flash-message />
 
-<body>
-    <h1>商品一覧</h1>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>SKU</th>
+                    <th>商品名</th>
+                    <th>カテゴリ</th>
+                    <th>納入先</th>
+                    <th>単価</th>
+                    <th class="text-right">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($products as $product)
+                    <tr>
+                        <td>{{ $product->sku }}</td>
+                        <td>{{ $product->name }}</td>
+                        <td>{{ $product->category->name }}</td>
+                        <td>{{ $product->customer->name }}</td>
+                        <td>{{ number_format($product->price) }}円</td>
+                        <td class="text-right">
+                            <div class="flex justify-end gap-2">
+                                <x-button variant="secondary" :href="route('products.edit', $product)">編集</x-button>
+                                <x-button variant="secondary" :href="route('products.parts.index', $product)">部品表</x-button>
+                                <x-delete-button :action="route('products.destroy', $product)" />
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
-    <p><a href="{{ route('products.create') }}">新規登録</a></p>
-
-    @if (session('success'))
-    <p style="color: green;">{{ session('success') }}</p>
-    @endif
-
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>SKU</th>
-                <th>商品名</th>
-                <th>カテゴリ</th>
-                <th>仕入先</th>
-                <th>単価</th>
-                <th>単位</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($products as $product)
-            <tr>
-                <td>{{ $product->id }}</td>
-                <td>{{ $product->sku }}</td>
-                <td>{{ $product->name }}</td>
-                <td>{{ $product->category->name }}</td>
-                <td>{{ $product->supplier->name }}</td>
-                <td>{{ number_format($product->price) }}円</td>
-                <td>{{ $product->unit }}</td>
-                <td>
-                    <a href="{{ route('products.edit', $product) }}">編集</a>
-                    <a href="{{ route('products.parts.index', $product) }}">部品表</a>
-                    <form action="{{ route('products.destroy', $product) }}" method="POST" style="display:inline;" onsubmit="return confirm('本当に削除しますか？');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">削除</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    {{ $products->links() }}
-</body>
-
-</html>
+    <div class="mt-4">
+        {{ $products->links() }}
+    </div>
+</x-layouts.app>

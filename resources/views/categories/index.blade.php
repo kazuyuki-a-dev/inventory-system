@@ -1,49 +1,39 @@
-<!DOCTYPE html>
-<html lang="ja">
+<x-layouts.app title="カテゴリ一覧">
+    <x-slot:actions>
+        <x-button :href="route('categories.create')">新規登録</x-button>
+    </x-slot:actions>
 
-<head>
-    <meta charset="UTF-8">
-    <title>カテゴリ一覧 | 在庫管理システム</title>
-</head>
+    <x-flash-message />
 
-<body>
-    <h1>カテゴリ一覧</h1>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>カテゴリ名</th>
+                    <th>登録日</th>
+                    <th class="text-right">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($categories as $category)
+                    <tr>
+                        <td>{{ $category->id }}</td>
+                        <td>{{ $category->name }}</td>
+                        <td>{{ $category->created_at->format('Y/m/d') }}</td>
+                        <td class="text-right">
+                            <div class="flex justify-end gap-2">
+                                <x-button variant="secondary" :href="route('categories.edit', $category)">編集</x-button>
+                                <x-delete-button :action="route('categories.destroy', $category)" />
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 
-    <p><a href="{{ route('categories.create') }}">新規登録</a></p>
-
-    @if (session('success'))
-    <p style="color: green;">{{ session('success') }}</p>
-    @endif
-
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>カテゴリ名</th>
-                <th>登録日</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($categories as $category)
-            <tr>
-                <td>{{ $category->id }}</td>
-                <td>{{ $category->name }}</td>
-                <td>{{ $category->created_at->format('Y/m/d') }}</td>
-                <td>
-                    <a href="{{ route('categories.edit', $category) }}">編集</a>
-                    <form action="{{ route('categories.destroy', $category) }}" method="POST" style="display:inline;" onsubmit="return confirm('本当に削除しますか？');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit">削除</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-
-    {{ $categories->links() }}
-</body>
-
-</html>
+    <div class="mt-4">
+        {{ $categories->links() }}
+    </div>
+</x-layouts.app>
