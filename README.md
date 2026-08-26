@@ -1,5 +1,7 @@
 # 在庫管理システム (Manufacturing Inventory Management System)
 
+![tests](https://github.com/kazuyuki-a-dev/inventory-system/actions/workflows/tests.yml/badge.svg)
+
 製造業向けの在庫管理システムです。前職で製造業の経験をもとに、「仕入先からの部品調達 → 製造指示による部品消費・商品生産 → 納入先への出荷」という一連の業務フローを1つのアプリで管理できるように設計・実装しました。
 
 ## スクリーンショット
