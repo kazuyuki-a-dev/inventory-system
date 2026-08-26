@@ -1,11 +1,12 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/laravel",
+    "name": "kazuyuki-a-dev/inventory-system",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "製造業向け在庫管理システム。仕入先からの部品調達・製造指示による部品消費/商品生産・納入先への出荷までの業務フローを管理するLaravelアプリ",
     "keywords": [
         "laravel",
-        "framework"
+        "inventory-management",
+        "manufacturing"
     ],
     "license": "MIT",
     "require": {
